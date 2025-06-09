@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Refit;
+using IGlassAPI.Data;
+using IGlassAPI.Models;
 using IGlassAPI.Queue;
 using System;
 using System.Threading.Tasks;
@@ -10,28 +13,32 @@ namespace IGlassAPI.Controllers
     [Route("api/[controller]")]
     public class PayloadController : ControllerBase
     {
-        private readonly IQueueProvider _queueProvider;
         private readonly ILogger<PayloadController> _logger;
+        private readonly IQueueProvider _queueProvider;
 
-        public PayloadController(IQueueProvider queueProvider, ILogger<PayloadController> logger)
+        public PayloadController(ILogger<PayloadController> logger, IQueueProvider queueProvider)
         {
-            _queueProvider = queueProvider;
             _logger = logger;
+            _queueProvider = queueProvider;
         }
 
-        [HttpPost("telemetrycollector")]
-        public async Task<IActionResult> TelemetryCollector([FromBody] object payload)
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] object payload)
         {
+            var clientId = Request.Headers["X-Client-ID"].ToString();
+            if (string.IsNullOrEmpty(clientId))
+                return BadRequest("Client ID header is required.");
+
             try
             {
                 string json = payload.ToString();
-                await _queueProvider.EnqueueAsync(json);
+                await _queueProvider.EnqueueAsync(json, clientId);
                 return Ok(new { status = "queued" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to enqueue payload.");
-                return StatusCode(500, "Internal Server Error");
+                _logger.LogError(ex, "Error while queueing payload.");
+                return StatusCode(500, "Error while queueing payload.");
             }
         }
     }

@@ -4,6 +4,6 @@ namespace IGlassAPI.Queue
 {
     public interface IQueueProvider
     {
-        Task EnqueueAsync(string payload);
+        Task EnqueueAsync(string payload, string clientID);
     }
 }

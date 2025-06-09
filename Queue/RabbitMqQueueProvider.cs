@@ -1,10 +1,10 @@
-using IGlassAPI.Controllers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using RabbitMQ.Client;
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using RabbitMQ.Client;
+using IGlassAPI.Controllers;
 
 namespace IGlassAPI.Queue
 {
@@ -37,7 +37,7 @@ namespace IGlassAPI.Queue
             }
         }
 
-        public Task EnqueueAsync(string payload)
+        public Task EnqueueAsync(string payload,string clientID)
         {
             var body = Encoding.UTF8.GetBytes(payload);
             _channel.BasicPublish("", _queueName, null, body);

@@ -1,13 +1,12 @@
 {
   "profiles": {
-    "IGlassAPI": {
+    "RefitEfCoreApiSolution": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:63554;http://localhost:63555"
+      "applicationUrl": "https://localhost:50319;http://localhost:50320"
     }
   }
-}
 }
