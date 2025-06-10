@@ -1,11 +1,12 @@
-using System.Threading.Tasks;
-using Refit;
 
-namespace IGlassAPI.RefitClients
+using Refit;
+using System.Threading.Tasks;
+
+namespace RefitQueueWorkerHybrid.RefitClients
 {
     public interface IApiClient
     {
-        [Post("/api/payload")]
+        [Post("/api/external")]
         Task PostPayloadAsync([Body] object payload);
     }
 }

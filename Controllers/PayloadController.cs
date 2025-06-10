@@ -1,9 +1,7 @@
+
+using IGlassAPI.Queue;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Refit;
-using IGlassAPI.Data;
-using IGlassAPI.Models;
-using IGlassAPI.Queue;
 using System;
 using System.Threading.Tasks;
 
@@ -23,7 +21,7 @@ namespace IGlassAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] object payload)
+        public async Task<IActionResult> telemetrycollector([FromBody] object payload)
         {
             var clientId = Request.Headers["X-Client-ID"].ToString();
             if (string.IsNullOrEmpty(clientId))

@@ -6,13 +6,31 @@ namespace IGlassAPI.Data
 {
     public class ClientLogDbContext : DbContext
     {
-        public ClientLogDbContext(DbContextOptions<ClientLogDbContext> options) : base(options) { }
+        private readonly string _schema;
+        public ClientLogDbContext(DbContextOptions<ClientLogDbContext> options, string schema = null)
+     : base(options)
+        {
+            _schema = schema;
+        }
 
-        public DbSet<LogEntry> Logs { get; set; }
+        public DbSet<DynamicLog> Logs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<LogEntry>().ToTable("Logs");
+            if (!string.IsNullOrEmpty(_schema))
+            {
+                modelBuilder.HasDefaultSchema(_schema); 
+            }
+
+            modelBuilder.Entity<DynamicLog>(entity =>
+            {
+                entity.ToTable("Logs");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Timestamp);
+                entity.Property(e => e.RawData);
+            });
         }
+
+       
     }
 }
